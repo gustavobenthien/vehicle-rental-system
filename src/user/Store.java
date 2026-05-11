@@ -1,15 +1,22 @@
 package user;
 import domain.Menus;
+import domain.stock.Stock;
 import java.util.Scanner;
 
 public class Store {
 
-    private Scanner s = new Scanner(System.in);
+    Stock stock = new Stock();
+    private static Scanner scanner = new Scanner(System.in);
     private static Menus menus = new Menus();
+
     private static int choice;
 
     public static void main(String[] args) {
 
+        mainMenu();
+    }
+
+    private static void mainMenu() {
         boolean isRunning = true;
         
         do{
@@ -18,10 +25,10 @@ public class Store {
             switch(choice){
 
                 case 1 : 
-                    menus.adminMenu();
+                    adminChoice();
                     break;
                 case 2 :
-                    menus.mainMenu();
+                    userChoice();
                     break;
                 case 3 :
                     isRunning = false;
@@ -32,17 +39,30 @@ public class Store {
 
     private static void adminChoice() {
 
+        menus.adminMenu();
+
         int choice = 0;
+        String model;
+        String brand;
 
         switch(choice){
 
             case 1 :
-                
+                stock.addVehicle(choice, modelInput(), brandInput(), Stock.vehicleStock);
                 break;
             case 2 :
+                stock.removeVehicle(modelInput(), brandInput(), Stock.vehicleStock);
                 break;
             case 3 :
+                menus.vehicleMenu();
+
+                int subChoice;
+                subChoice = scanner.nextInt();
+                stock.showVehicles(subChoice, Stock.vehicleStock);
                 break;
+            case 4 :
+                mainMenu();
         } 
     }
+
 }
