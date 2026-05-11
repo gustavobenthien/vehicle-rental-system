@@ -1,8 +1,8 @@
-package domain;
+package domain.vehicles;
 
 public class Truck extends Vehicle {
 
-    Truck(String model, String brand) {
+    public Truck(String model, String brand) {
         super(model, brand);
     } 
 }

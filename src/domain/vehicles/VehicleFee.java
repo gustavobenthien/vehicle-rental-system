@@ -1,4 +1,4 @@
-package domain;
+package domain.vehicles;
 
 public enum VehicleFee {
 

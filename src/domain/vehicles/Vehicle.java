@@ -1,11 +1,11 @@
-package domain;
+package domain.vehicles;
 
 public class Vehicle {
 
     private String model;
     private String brand;
 
-    Vehicle(String model, String brand) {
+    public Vehicle(String model, String brand) {
         this.model = model;
         this.brand = brand;
     }
