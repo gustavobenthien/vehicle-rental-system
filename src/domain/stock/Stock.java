@@ -3,6 +3,7 @@ import domain.vehicles.Car;
 import domain.vehicles.Motorcycle;
 import domain.vehicles.Truck;
 import domain.vehicles.Vehicle;
+import domain.vehicles.VehicleFee;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,17 +13,14 @@ public class Stock {
     public static final ArrayList<Vehicle> userRents = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
 
+    public static int totalValue = 0;
+
     // Admin stock management
     // Type 1 = Truck
     // Type 2 = Car
     // Type 3 = Motorcycle
 
     public void addVehicle(int type, String model, String brand, ArrayList<Vehicle> list) {
-
-        System.out.print("Vehicle model: ");
-        model = scanner.nextLine();
-        System.out.print("Vehicle brand: ");
-        brand = scanner.nextLine();
 
         switch(type) {
 
@@ -42,25 +40,25 @@ public class Stock {
 
     public void removeVehicle(String model, String brand, ArrayList<Vehicle> list) {
 
-        System.out.println("Vehicle model: ");
-        model = scanner.nextLine();
-        System.out.println("Vehicle brand: ");
-        brand = scanner.nextLine();
-
         boolean isVehicle = false;
 
-        for(Vehicle v : list) {
+        for(int i = 0; i < list.size(); i++) {
+            Vehicle v = list.get(i);
+
             if(v.getModel().equalsIgnoreCase(model) && v.getBrand().equalsIgnoreCase(brand)) {
-                isVehicle = true;
-            }
-            
-            if(isVehicle) {
-                list.remove(v);
+                list.remove(i);
+                return;
             }
         }
+
+        System.out.println("Vehicle not found!");
     }
 
     public void showVehicles(int type, ArrayList<Vehicle> list) {
+
+        if(list.isEmpty()) return;
+
+        System.out.println("\n=====================");
 
         for(Vehicle v : list) {
 
@@ -68,52 +66,54 @@ public class Stock {
 
                 case 1 : 
                     if(v instanceof Truck) {
-                        System.out.println(v.getModel());
-                        System.out.println(v.getBrand() + "\n");
+                        System.out.print(v.getModel() + "-");
+                        System.out.println(v.getBrand());
                     }
                     break;
                 case 2 :
                     if(v instanceof Car) {
-                        System.out.println(v.getModel());
-                        System.out.println(v.getBrand() + "\n");
+                        System.out.print(v.getModel() + "-");
+                        System.out.println(v.getBrand());
                     }      
                     break;
                 case 3 :
                     if(v instanceof Motorcycle) {
-                        System.out.println(v.getModel());
-                        System.out.println(v.getBrand() + "\n");
+                        System.out.print(v.getModel() + "-");
+                        System.out.println(v.getBrand());
                     } 
                     break;
-                case 4 : // Show all
-                    System.out.println(v.getModel());
-                    System.out.println(v.getBrand() + "\n");
-                    break;
+                case 4 :
+                    return;
                 default :
                     throw new IllegalArgumentException("Invalid value");
             }
-        }           
+        }
+
+        System.out.println("=====================");
     }
 
     // User rent management
 
-    public void rentVehicle(int type, String model, String brand) {
+    public void rentVehicle(int type, String model, String brand, int hours) {
         
-        if(type > 3 || type < 1) {
-            throw new IllegalArgumentException("Invalid value!");
+        switch(type) {
+            case 1 :
+                totalValue = hours * VehicleFee.TRUCK.getHourFee();
+                break;
+            case 2 : 
+                totalValue = hours * VehicleFee.CAR.getHourFee();
+                break;
+            case 3 :
+                totalValue = hours * VehicleFee.MOTORCYCLE.getHourFee();
+                break;
+            default :
+                throw new IllegalArgumentException("Invalid value");
         }
-
-        showVehicles(type, vehicleStock);
-
-        System.out.print("Choose model: ");
-        model = scanner.nextLine();
-        System.out.print("Choose brand: ");
-        brand = scanner.nextLine();
-
+  
         removeVehicle(model, brand, vehicleStock);
         addVehicle(type, model, brand, userRents);
     }
 
-    // Fix the type thing in here
     public void cancelRent(int type, String model, String brand) {
 
         if(userRents.isEmpty()){
