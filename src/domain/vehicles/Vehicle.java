@@ -4,6 +4,8 @@ public class Vehicle {
 
     private String model;
     private String brand;
+    private float pricing;
+    private float totalValue;
 
     public Vehicle(String model, String brand) {
         this.model = model;
@@ -24,5 +26,21 @@ public class Vehicle {
 
     public String getBrand() {
         return this.brand;
+    }
+
+    public void setPricing(float pricing) {
+        this.pricing = pricing;
+    } 
+
+    public float getPricing() {
+        return this.pricing;
+    }
+
+    public void setTotalValue(float totalValue) {
+        this.totalValue = totalValue;
+    }
+
+    public float getTotalValue() {
+        return this.totalValue;
     }
 }
