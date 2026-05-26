@@ -6,6 +6,7 @@ import domain.vehicles.Truck;
 import domain.vehicles.Vehicle;
 import java.util.ArrayList;
 import java.util.Scanner;
+import domain.console.Console;
 
 public class Client implements RentalService {
     
@@ -20,6 +21,7 @@ public class Client implements RentalService {
         
         Vehicle newRent = searchVehicle(model, brand, Client.rents);
 
+        Console.clearConsole();
         System.out.println("\nRented: ");
         System.out.println("=====================");
         System.out.println(newRent.getModel() + '-' + newRent.getBrand());
@@ -35,6 +37,7 @@ public class Client implements RentalService {
         while(true){
             
             try{
+
                 int hours = Input.hour();
                 Vehicle newVehicle;
 
@@ -60,11 +63,17 @@ public class Client implements RentalService {
 
                         receipt(model, brand, pricing, Client.rents);
                         return;
+                    case 4 :
+                        return;
                     default :
                         throw new IllegalArgumentException();
                 }
+
             } catch(IllegalArgumentException e) {
-                System.out.println("Invalid value! Try again");
+                Console.clearConsole();
+                System.out.println("Invalid value! Try again.");
+                System.out.println("(Press enter) >: ");
+                scanner.nextLine();
             }
         }
     }
@@ -77,59 +86,78 @@ public class Client implements RentalService {
 
             if(v.getModel().equalsIgnoreCase(model) && v.getBrand().equalsIgnoreCase(brand)) {
                 list.remove(i);
-                Admin.stock.add(v);
                 return;
-            }
+            }    
         }
-
-        System.out.println("Vehicle not rented!");
+        
+        Console.clearConsole();
+        System.out.println("Vehicle not found!");
+        System.out.print("(Press enter) >: ");
+        scanner.nextLine();
     }
 
     @Override
-    public void showVehicles(int type, ArrayList<Vehicle> list) {
+    public boolean showVehicles(int type, ArrayList<Vehicle> list) {
 
-        if(list.isEmpty()) {
-            System.out.println("No vehicles rented at the moment.");
-            return;
-        }
+        try{
 
-        System.out.println("\n=====================");
+            boolean isInstance = false;
 
-        for(Vehicle v : list) {
+            for(Vehicle v : list) {
 
-            switch(type) {
+                switch(type) {
 
-                case 1 : 
-                    if(v instanceof Truck) {
-                        System.out.print(v.getModel() + "-");
-                        System.out.print(v.getBrand());
-                        System.out.print('(' + v.getTotalValue() + " R$)");
-                    }
-                    break;
-                case 2 :
-                    if(v instanceof Car) {
-                        System.out.print(v.getModel() + "-");
-                        System.out.print(v.getBrand());
-                        System.out.print('(' + v.getTotalValue() + " R$)");
-                    }      
-                    break;
-                case 3 :
-                    if(v instanceof Motorcycle) {
-                        System.out.print(v.getModel() + "-");
-                        System.out.print(v.getBrand());
-                        System.out.print('(' + v.getTotalValue() + " R$)");
-                    } 
-                    break;
-                case 4 :
-                    return;
-                default :
-                    throw new IllegalArgumentException("Invalid value");
+                    case 1 : 
+                        if(v instanceof Truck) {
+                            System.out.println("=====================");
+                            System.out.print(v.getModel() + "-");
+                            System.out.print(v.getBrand());
+                            System.out.print(" (" + v.getTotalValue() + " R$)\n");
+                            isInstance = true;
+                        }
+                        break;
+                    case 2 :
+                        if(v instanceof Car) {
+                            System.out.println("=====================");
+                            System.out.print(v.getModel() + "-");
+                            System.out.print(v.getBrand());
+                            System.out.print(" (" + v.getTotalValue() + " R$)\n");
+                            isInstance = true;
+                        }      
+                        break;
+                    case 3 :
+                        if(v instanceof Motorcycle) {
+                            System.out.println("=====================");
+                            System.out.print(v.getModel() + "-");
+                            System.out.print(v.getBrand());
+                            System.out.print(" (" + v.getTotalValue() + " R$)\n");
+                            isInstance = true;
+                        } 
+                        break;
+                    case 4 :
+                        return false;
+                    default :
+                        throw new IllegalArgumentException();
+                }
             }
+
+            if(!isInstance) {
+                return false;
+            }
+
+            System.out.println("=====================");
+            System.out.print("(Press enter) >: ");
+            scanner.nextLine();
+
+        } catch(IllegalArgumentException e) {
+            Console.clearConsole();
+            System.out.println("Invalid value! Try again.");
+            System.out.println("(Press enter) >: ");
+            scanner.nextLine();
+            return false;
         }
-        
-        System.out.println("\n=====================");
-        System.out.print("(Press enter) >: ");
-        scanner.nextLine();
+
+        return true;
     }
 
     @Override
@@ -142,9 +170,14 @@ public class Client implements RentalService {
                 Vehicle vehicle = new Vehicle(v.getModel(), v.getBrand(), v.getPricing());
                 vehicle.setTotalValue(v.getTotalValue());
                 return vehicle;
-            }
+            }    
         }
 
+        Console.clearConsole();
+        System.out.println("Vehicle not found!");
+        System.out.print("(Press enter) >: ");
+        scanner.nextLine();
+        
         return null;
     }
 }

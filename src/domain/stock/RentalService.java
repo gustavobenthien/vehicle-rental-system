@@ -7,7 +7,7 @@ public interface RentalService {
 
     void removeVehicle(String model, String brand, ArrayList<Vehicle> list);
 
-    void showVehicles(int type, ArrayList<Vehicle> list);
+    boolean showVehicles(int type, ArrayList<Vehicle> list);
     
     Vehicle searchVehicle(String model, String brand, ArrayList<Vehicle> list);
 }
