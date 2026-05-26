@@ -55,7 +55,7 @@ public abstract class Input {
         while(true){
             
             try{
-                System.out.print("Hour pricing: ");
+                System.out.print("Hours to be used: ");
                 int hours = Integer.parseInt(scanner.nextLine());
 
                 return hours;
@@ -64,5 +64,4 @@ public abstract class Input {
             }
         }
     }
-
 }

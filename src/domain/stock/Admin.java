@@ -1,5 +1,4 @@
 package domain.stock;
-import domain.console.Input;
 import domain.vehicles.Car;
 import domain.vehicles.Motorcycle;
 import domain.vehicles.Truck;
@@ -13,28 +12,27 @@ public class Admin implements RentalService {
     private Scanner scanner = new Scanner(System.in);
 
     @Override
-    public void addVehicle(int type, String model, String brand, ArrayList<Vehicle> list) {
+    public void addVehicle(int type, String model, String brand, float pricing, ArrayList<Vehicle> list) {
 
         while(true){
 
             try{
-                float pricing = Input.pricing();
                 Vehicle newVehicle;
 
                 switch(type) {
                     case 1 :
-                        newVehicle = new Truck(model, brand);
-                        newVehicle.setPricing(pricing);
+                        newVehicle = new Truck(model, brand, pricing);
+                        newVehicle.setTotalValue(0);
                         stock.add(newVehicle);
                         return;
                     case 2 :
-                        newVehicle = new Car(model, brand);
-                        newVehicle.setPricing(pricing);
+                        newVehicle = new Car(model, brand, pricing);
+                        newVehicle.setTotalValue(0);
                         stock.add(newVehicle);
                         return;
                     case 3 :
-                        newVehicle = new Motorcycle(model, brand);
-                        newVehicle.setPricing(pricing);
+                        newVehicle = new Motorcycle(model, brand, pricing);
+                        newVehicle.setTotalValue(0);
                         stock.add(newVehicle);
                         return;
                     default :
@@ -86,15 +84,15 @@ public class Admin implements RentalService {
                 case 2 :
                     if(v instanceof Car) {
                         System.out.print(v.getModel() + "-");
-                        System.out.println(v.getBrand() + "-");
-                        System.out.println(v.getPricing() + "by hour");
+                        System.out.print(v.getBrand() + " | ");
+                        System.out.print(v.getPricing() + " by hour");
                     }      
                     break;
                 case 3 :
                     if(v instanceof Motorcycle) {
                         System.out.print(v.getModel() + "-");
-                        System.out.println(v.getBrand() + "-");
-                        System.out.println(v.getPricing() + "by hour");
+                        System.out.print(v.getBrand() + "-");
+                        System.out.print(v.getPricing() + "by hour");
                     } 
                     break;
                 case 4 :
@@ -105,6 +103,8 @@ public class Admin implements RentalService {
         }
 
         System.out.println("\n=====================");
+        System.out.print("(Press enter) >: ");
+        scanner.nextLine();
     }
 
     @Override
@@ -114,7 +114,9 @@ public class Admin implements RentalService {
             Vehicle v = list.get(i);
 
             if(v.getModel().equalsIgnoreCase(model) && v.getBrand().equalsIgnoreCase(brand)) {
-                return new Vehicle(v.getModel(), v.getBrand());
+                Vehicle vehicle = new Vehicle(v.getModel(), v.getBrand(), v.getPricing());
+                vehicle.setTotalValue(v.getTotalValue());
+                return vehicle;
             }
         }
 

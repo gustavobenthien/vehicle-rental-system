@@ -6,10 +6,12 @@ public class Vehicle {
     private String brand;
     private float pricing;
     private float totalValue;
-
-    public Vehicle(String model, String brand) {
+    
+    public Vehicle(String model, String brand, float pricing) {
         this.model = model;
         this.brand = brand;
+        this.pricing = pricing;
+        this.totalValue = 0;
     }
 
     public void setModel(String model) {

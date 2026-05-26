@@ -12,44 +12,54 @@ public class Client implements RentalService {
     public static final ArrayList<Vehicle> rents = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
 
-    public float calculateFee(Vehicle vehicle, int hours) {
-        return hours * vehicle.getPricing();               
+    public float calculateFee(float pricing, int hours) {
+        return pricing * hours;              
     }    
 
-    public void clientStatus(ArrayList<Vehicle> list) {
+    public void receipt(String model, String brand, float pricing, ArrayList<Vehicle> list) {
+        
+        Vehicle newRent = searchVehicle(model, brand, Client.rents);
 
-        if(list.isEmpty()){
-            System.out.println("No vehicles available at the moment.");
-            return;
-        }
-
-
+        System.out.println("\nRented: ");
+        System.out.println("=====================");
+        System.out.println(newRent.getModel() + '-' + newRent.getBrand());
+        System.out.println("Total value: " + newRent.getTotalValue());
+        System.out.println("=====================");
+        System.out.print("(Press enter) >: ");
+        scanner.nextLine();
     }
     
     @Override
-    public void addVehicle(int type, String model, String brand, ArrayList<Vehicle> list) {
+    public void addVehicle(int type, String model, String brand, float pricing, ArrayList<Vehicle> list) {
 
         while(true){
+            
             try{
                 int hours = Input.hour();
                 Vehicle newVehicle;
 
                 switch(type) {
                     case 1 :
-                        newVehicle = new Truck(model, brand);
-                        newVehicle.setTotalValue(calculateFee(newVehicle, hours));
+                        newVehicle = new Truck(model, brand, pricing);
+                        newVehicle.setTotalValue(calculateFee(pricing, hours));
                         rents.add(newVehicle);
-                        break;
+
+                        receipt(model, brand, pricing, Client.rents);
+                        return;
                     case 2 :
-                        newVehicle = new Car(model, brand);
-                        newVehicle.setTotalValue(calculateFee(newVehicle, hours));
+                        newVehicle = new Car(model, brand, pricing);
+                        newVehicle.setTotalValue(calculateFee(pricing, hours));
                         rents.add(newVehicle);
-                        break;
+
+                        receipt(model, brand, pricing, Client.rents);
+                        return;
                     case 3 :
-                        newVehicle = new Motorcycle(model, brand);
-                        newVehicle.setTotalValue(calculateFee(newVehicle, hours));
+                        newVehicle = new Motorcycle(model, brand, pricing);
+                        newVehicle.setTotalValue(calculateFee(pricing, hours));
                         rents.add(newVehicle);
-                        break;
+
+                        receipt(model, brand, pricing, Client.rents);
+                        return;
                     default :
                         throw new IllegalArgumentException();
                 }
@@ -78,7 +88,10 @@ public class Client implements RentalService {
     @Override
     public void showVehicles(int type, ArrayList<Vehicle> list) {
 
-        if(list.isEmpty()) return;
+        if(list.isEmpty()) {
+            System.out.println("No vehicles rented at the moment.");
+            return;
+        }
 
         System.out.println("\n=====================");
 
@@ -89,19 +102,22 @@ public class Client implements RentalService {
                 case 1 : 
                     if(v instanceof Truck) {
                         System.out.print(v.getModel() + "-");
-                        System.out.println(v.getBrand());
+                        System.out.print(v.getBrand());
+                        System.out.print('(' + v.getTotalValue() + " R$)");
                     }
                     break;
                 case 2 :
                     if(v instanceof Car) {
                         System.out.print(v.getModel() + "-");
-                        System.out.println(v.getBrand());
+                        System.out.print(v.getBrand());
+                        System.out.print('(' + v.getTotalValue() + " R$)");
                     }      
                     break;
                 case 3 :
                     if(v instanceof Motorcycle) {
                         System.out.print(v.getModel() + "-");
-                        System.out.println(v.getBrand());
+                        System.out.print(v.getBrand());
+                        System.out.print('(' + v.getTotalValue() + " R$)");
                     } 
                     break;
                 case 4 :
@@ -110,8 +126,10 @@ public class Client implements RentalService {
                     throw new IllegalArgumentException("Invalid value");
             }
         }
-
-        System.out.println("=====================");
+        
+        System.out.println("\n=====================");
+        System.out.print("(Press enter) >: ");
+        scanner.nextLine();
     }
 
     @Override
@@ -121,7 +139,9 @@ public class Client implements RentalService {
             Vehicle v = list.get(i);
 
             if(v.getModel().equalsIgnoreCase(model) && v.getBrand().equalsIgnoreCase(brand)) {
-                return new Vehicle(v.getModel(), v.getBrand());
+                Vehicle vehicle = new Vehicle(v.getModel(), v.getBrand(), v.getPricing());
+                vehicle.setTotalValue(v.getTotalValue());
+                return vehicle;
             }
         }
 
